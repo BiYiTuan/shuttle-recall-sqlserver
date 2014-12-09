@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shuttle.Recall.SqlServer", "Shuttle.Recall.SqlServer\Shuttle.Recall.SqlServer.csproj", "{D71B0D88-2AFD-44CC-8724-2F3FB98086CD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{71AF31CB-5587-44B4-A1EA-9FBDBA0E1033}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{35F63E6D-1BA0-44EF-B719-25A793D83A88}"
+	ProjectSection(SolutionItems) = preProject
+		.build\package.msbuild = .build\package.msbuild
+		.build\package.nuspec = .build\package.nuspec
+		.build\Shuttle.Core.MSBuild.dll = .build\Shuttle.Core.MSBuild.dll
+		.build\Shuttle.Core.MSBuild.targets = .build\Shuttle.Core.MSBuild.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shuttle.Recall.SqlServer.Tests", "Shuttle.Recall.SqlServer.Tests\Shuttle.Recall.SqlServer.Tests.csproj", "{7381EC8B-9DF4-43D2-B62C-87FDACBD6B44}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D75188A5-8056-4086-A804-D5D5205B25E4}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D71B0D88-2AFD-44CC-8724-2F3FB98086CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D71B0D88-2AFD-44CC-8724-2F3FB98086CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D71B0D88-2AFD-44CC-8724-2F3FB98086CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D71B0D88-2AFD-44CC-8724-2F3FB98086CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7381EC8B-9DF4-43D2-B62C-87FDACBD6B44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7381EC8B-9DF4-43D2-B62C-87FDACBD6B44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7381EC8B-9DF4-43D2-B62C-87FDACBD6B44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7381EC8B-9DF4-43D2-B62C-87FDACBD6B44}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
