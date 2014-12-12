@@ -41,6 +41,8 @@
 			<NugetBinaries Include="$(DeploymentFolder)\release\**\$(PackageAssembly).dll" />
 		</ItemGroup>
 
+		<Copy SourceFiles="..\Shuttle.Recall.SqlServer\.scripts\EventStoreCreate.sql" DestinationFolder="$(DeploymentFolder)\nuget\scripts" SkipUnchangedFiles="false" />
+		
 		<Copy SourceFiles="package.nuspec" DestinationFolder="$(DeploymentFolder)\nuget\" SkipUnchangedFiles="false" />
 		<Copy SourceFiles="@(NugetBinaries)" DestinationFolder="$(DeploymentFolder)\nuget\lib\%(RecursiveDir)" SkipUnchangedFiles="false" />
 

@@ -9,7 +9,7 @@ namespace Shuttle.Recall.SqlServer.Tests
 		[Test]
 		public void Should_be_able_to_use_event_stream()
 		{
-			var store = new EventStore(new DefaultSerializer(), DatabaseGateway, new EventStoreQueryFactory());
+			var store = new EventStore(EventStoreSection.Configuration(), new DefaultSerializer(), DatabaseGateway, new EventStoreQueryFactory());
 			var aggregate = new Aggregate(Guid.NewGuid());
 			EventStream eventStream;
 
@@ -22,7 +22,7 @@ namespace Shuttle.Recall.SqlServer.Tests
 			var moveCommand = new MoveCommand();
 
 			using (Timer.Time("adding events"))
-				for (var i = 0; i < 10000; i++)
+				for (var i = 0; i < 100; i++)
 				{
 					moveCommand = new MoveCommand
 					{

@@ -15,7 +15,7 @@ namespace Shuttle.Recall.SqlServer
 		private readonly IEventStoreQueryFactory _queryFactory;
 		private readonly DataSource _eventStoreDataSource;
 
-		public EventStore(ISerializer serializer, IDatabaseGateway databaseGateway, IEventStoreQueryFactory queryFactory)
+		public EventStore(IEventStoreConfiguration eventStoreConfiguration, ISerializer serializer, IDatabaseGateway databaseGateway, IEventStoreQueryFactory queryFactory)
 		{
 			Guard.AgainstNull(serializer, "serializer");
 			Guard.AgainstNull(databaseGateway, "databaseGateway");
@@ -25,7 +25,7 @@ namespace Shuttle.Recall.SqlServer
 			_databaseGateway = databaseGateway;
 			_queryFactory = queryFactory;
 
-			_eventStoreDataSource = new DataSource("EventStore", new SqlDbDataParameterFactory());
+			_eventStoreDataSource = new DataSource(eventStoreConfiguration.ConnectionStringName, new SqlDbDataParameterFactory());
 		}
 
 		public EventStream Get(Guid id)

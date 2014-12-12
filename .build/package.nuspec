@@ -9,9 +9,16 @@
 		<projectUrl>https://github.com/shuttle/shuttle-recall-sqlserver</projectUrl>
 		<iconUrl>https://raw.githubusercontent.com/Shuttle/shuttle-recall-sqlserver/master/.media/logo.png</iconUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
-		<description></description>
+		<description>[EXPERIMENTAL] Event Store implementation backed by Microsoft SQL Server.</description>
 		<releaseNotes/>
 		<copyright>Copyright (c) 2011-{year}, Eben Roux</copyright>
-		<tags>shuttle</tags>
+		<tags>shuttle shuttle-recall event-sourcing</tags>
+		<dependencies>
+			<dependency id="shuttle-recall-core" version="{shuttle-recall-core-version}" />
+		</dependencies>
 	</metadata>
+	<files>
+		<file src="scripts\*.sql" target="scripts" />
+		<file src="lib\**\*.*" target="lib" />
+	</files>
 </package>
