@@ -14,9 +14,17 @@ GO
 ALTER TABLE [dbo].[EventStore] ADD  CONSTRAINT [DF_EventStore_DateRegistered]  DEFAULT (getdate()) FOR [DateRegistered]
 GO
 
-CREATE TABLE [dbo].[UniqueHash](
-	[IndexType] [int] NOT NULL,
-	[Hash] [binary](32) NOT NULL,
+CREATE TABLE [dbo].[TypeStore](
+	[Id] [uniqueidentifier] NOT NULL,
+	[AssemblyQualifiedName] [varchar](512) NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[EventStore] ADD  CONSTRAINT [DF_EventStore_DateRegistered]  DEFAULT (getdate()) FOR [DateRegistered]
+GO
+
+CREATE TABLE [dbo].[KeyStore](
+	[MD5Hash] [binary](32) NOT NULL,
+	[SHA256Hash] [binary](32) NOT NULL,
 	[Id] [uniqueidentifier] NOT NULL,
  CONSTRAINT [PK_UniqueHash] PRIMARY KEY NONCLUSTERED 
 (
