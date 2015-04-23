@@ -21,7 +21,7 @@ namespace Shuttle.Recall.SqlServer.Tests
 
 			var moveCommand = new MoveCommand();
 
-			using (Timer.Time("adding events"))
+			using (Timer.Time("adding initial events"))
 				for (var i = 0; i < 100; i++)
 				{
 					moveCommand = new MoveCommand
@@ -30,13 +30,13 @@ namespace Shuttle.Recall.SqlServer.Tests
 						DateMoved = DateTime.Now
 					};
 
-					eventStream.Add(aggregate.Move(moveCommand));
+					eventStream.AddEvent(aggregate.Move(moveCommand));
 				}
 
 			using (Timer.Time("saving event stream"))
 			using (DatabaseConnectionFactory.Create(EventStoreSource))
 			{
-				store.Save(eventStream);
+				store.SaveEventStream(eventStream);
 			}
 
 			using (DatabaseConnectionFactory.Create(EventStoreSource))
@@ -56,6 +56,40 @@ namespace Shuttle.Recall.SqlServer.Tests
 
 			Assert.AreEqual(moveCommand.Address, aggregate.State.Location.Address);
 			Assert.AreEqual(moveCommand.DateMoved, aggregate.State.Location.DateMoved);
+
+			using (Timer.Time("adding more events"))
+				for (var i = 0; i < 100; i++)
+				{
+					moveCommand = new MoveCommand
+					{
+						Address = string.Format("Address-{0}", i),
+						DateMoved = DateTime.Now
+					};
+
+					eventStream.AddEvent(aggregate.Move(moveCommand));
+				}
+
+			using (Timer.Time("saving event stream"))
+			using (DatabaseConnectionFactory.Create(EventStoreSource))
+			{
+				eventStream.AddSnapshot(aggregate.State);
+				store.SaveEventStream(eventStream);
+			}
+
+			using (DatabaseConnectionFactory.Create(EventStoreSource))
+			{
+				aggregate = new Aggregate(aggregate.Id);
+
+				using (Timer.Time("reading event stream"))
+				{
+					eventStream = store.Get(aggregate.Id);
+				}
+
+				using (Timer.Time("apply events/snapshot"))
+				{
+					eventStream.Apply(aggregate);
+				}
+			}
 		}
 	}
 }

@@ -10,6 +10,28 @@ namespace Shuttle.Recall.SqlServer
 {
 	public class EventStore : IEventStore
 	{
+		private class EventResult
+		{
+			public List<Event> Events { get; private set; }
+			public int Version { get; private set; }
+
+			public EventResult()
+			{
+				Events = new List<Event>();
+				Version = 0;
+			}
+
+			public void Add(Event @event)
+			{
+				if (Version < @event.Version)
+				{
+					Version = @event.Version;
+				}
+
+				Events.Add(@event);
+			}
+		}
+
 		private readonly ISerializer _serializer;
 		private readonly IDatabaseGateway _databaseGateway;
 		private readonly IEventStoreQueryFactory _queryFactory;
@@ -30,35 +52,73 @@ namespace Shuttle.Recall.SqlServer
 
 		public EventStream Get(Guid id)
 		{
-			var table = _databaseGateway.GetDataTableFor(_eventStoreDataSource, _queryFactory.Get(id));
 			var version = 0;
-			var events = new List<Event>();
+			Event snapshot = null;
+			var snapshotRow = _databaseGateway.GetSingleRowUsing(_eventStoreDataSource, _queryFactory.GetSnapshot(id));
+
+			if (snapshotRow != null)
+			{
+				version = SnapshotStoreColumns.Version.MapFrom(snapshotRow);
+
+				var assemblyQualifiedName = SnapshotStoreColumns.AssemblyQualifiedName.MapFrom(snapshotRow);
+
+				using (var stream = new MemoryStream(SnapshotStoreColumns.Data.MapFrom(snapshotRow)))
+				{
+					snapshot = new Event(version, assemblyQualifiedName, _serializer.Deserialize(Type.GetType(assemblyQualifiedName), stream));
+				}
+			}
+
+			var events = Events(id, version);
+
+			return new EventStream(id, events.Version, events.Events, snapshot);
+		}
+
+		private EventResult Events(Guid id, int fromVersion)
+		{
+			var table = _databaseGateway.GetDataTableFor(_eventStoreDataSource, _queryFactory.Get(id, fromVersion));
+			var result = new EventResult();
 
 			foreach (DataRow row in table.Rows)
 			{
-				version = EventStoreColumns.Version.MapFrom(row);
+				fromVersion = EventStoreColumns.Version.MapFrom(row);
 				var assemblyQualifiedName = EventStoreColumns.AssemblyQualifiedName.MapFrom(row);
 
 				using (var stream = new MemoryStream(EventStoreColumns.Data.MapFrom(row)))
 				{
-					events.Add(new Event(version, assemblyQualifiedName, _serializer.Deserialize(Type.GetType(assemblyQualifiedName), stream)));
+					result.Add(new Event(fromVersion, assemblyQualifiedName,
+						_serializer.Deserialize(Type.GetType(assemblyQualifiedName), stream)));
 				}
 			}
 
-			return new EventStream(id, version, events);
+			return result;
 		}
 
-		public void Save(EventStream eventStream)
+		public EventStream GetRaw(Guid id)
 		{
-			Guard.AgainstNull(eventStream,"eventStream");
+			var events = Events(id, 0);
+
+			return new EventStream(id, events.Version, events.Events, null);
+		}
+
+		public void SaveEventStream(EventStream eventStream)
+		{
+			Guard.AgainstNull(eventStream, "eventStream");
 
 			eventStream.ConcurrencyInvariant(_databaseGateway.GetScalarUsing<int>(_eventStoreDataSource, _queryFactory.GetVersion(eventStream.Id)));
+
+			if (eventStream.HasSnapshot)
+			{
+				using (var stream = _serializer.Serialize(eventStream.Snapshot.Data))
+				{
+					_databaseGateway.ExecuteUsing(_eventStoreDataSource, _queryFactory.SaveSnapshot(eventStream.Id, eventStream.Snapshot, stream.ToBytes()));
+				}
+			}
 
 			foreach (var @event in eventStream.NewEvents())
 			{
 				using (var stream = _serializer.Serialize(@event.Data))
 				{
-					_databaseGateway.ExecuteUsing(_eventStoreDataSource, _queryFactory.Add(eventStream.Id, @event, stream.ToBytes()));
+					_databaseGateway.ExecuteUsing(_eventStoreDataSource, _queryFactory.AddEvent(eventStream.Id, @event, stream.ToBytes()));
 				}
 			}
 		}

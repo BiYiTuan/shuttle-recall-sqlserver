@@ -50,15 +50,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Shuttle.Core.Data">
-      <HintPath>..\packages\shuttle-core-data.3.1.5\lib\net35-full\Shuttle.Core.Data.dll</HintPath>
+    <Reference Include="Shuttle.Core.Data, Version=3.1.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\shuttle-core-data.3.1.6\lib\net35-full\Shuttle.Core.Data.dll</HintPath>
     </Reference>
     <Reference Include="Shuttle.Core.Infrastructure">
       <HintPath>..\packages\shuttle-core-infrastructure.3.1.5\lib\net35-full\Shuttle.Core.Infrastructure.dll</HintPath>
     </Reference>
-    <Reference Include="Shuttle.Recall.Core, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Shuttle.Recall.Core, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\shuttle-recall-core.1.0.3\lib\net35-full\Shuttle.Recall.Core.dll</HintPath>
+      <HintPath>..\packages\shuttle-recall-core.1.0.5\lib\net35-full\Shuttle.Recall.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -72,10 +73,11 @@
     <Compile Include="Configuration\EventStoreConfiguration.cs" />
     <Compile Include="Configuration\IEventStoreConfiguration.cs" />
     <Compile Include="Configuration\Section\EventStoreSection.cs" />
+    <Compile Include="DataAccess\SnapshotStoreColumns.cs" />
     <Compile Include="DataAccess\EventStoreColumns.cs" />
-    <Compile Include="DataAccess\IUniqueHashStoreQueryFactory.cs" />
-    <Compile Include="DataAccess\UniqueHashColumns.cs" />
-    <Compile Include="DataAccess\UniqueHashStoreQueryFactory.cs" />
+    <Compile Include="DataAccess\IKeyStoreQueryFactory.cs" />
+    <Compile Include="DataAccess\KeyStoreColumns.cs" />
+    <Compile Include="DataAccess\KeyStoreQueryFactory.cs" />
     <Compile Include="EventStore.cs" />
     <Compile Include="DataAccess\EventStoreQueryFactory.cs" />
     <Compile Include="DataAccess\IEventStoreQueryFactory.cs" />
@@ -85,7 +87,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SqlServerResources.resx</DependentUpon>
     </Compile>
-    <Compile Include="UniqueHashStore.cs" />
+    <Compile Include="KeyStore.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

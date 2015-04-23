@@ -30,7 +30,11 @@ namespace Shuttle.Recall.SqlServer.Tests
 
 		public void Done(MovedEvent @event)
 		{
-			State.Location = new Location(@event.Address, @event.DateMoved);
+			State.Location = new Location
+				{
+					Address=	@event.Address,
+					DateMoved = @event.DateMoved
+				};
 		}
 
 		public void Done(AggregateState state)

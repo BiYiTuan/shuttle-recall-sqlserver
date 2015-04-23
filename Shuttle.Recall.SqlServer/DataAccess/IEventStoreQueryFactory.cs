@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using Shuttle.Core.Data;
 using Shuttle.Recall.Core;
 
@@ -7,8 +6,10 @@ namespace Shuttle.Recall.SqlServer
 {
 	public interface IEventStoreQueryFactory
 	{
-		IQuery Get(Guid id);
+		IQuery Get(Guid id, int i);
 		IQuery GetVersion(Guid id);
-		IQuery Add(Guid id, Event @event, byte[] data);
+		IQuery AddEvent(Guid id, Event @event, byte[] data);
+		IQuery GetSnapshot(Guid id);
+		IQuery SaveSnapshot(Guid id, Event @event, byte[] data);
 	}
 }
